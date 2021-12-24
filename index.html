@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+        <!-- コンテンツ表示画面 -->
+        <div>
+            <div>
+                名前：<input type="text" id="uname" class="name">
+            </div>
+            <div>
+                <textarea id="text" cols="30" rows="10" class="area"></textarea>
+                <button id="send">送信</button>
+            </div>
+            <div id="output" style="overflow: auto;height: 300px;"></div>
+        </div>
+    
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+
+
+
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, push, set, onChildAdded, remove, onChildRemoved } 
+        from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+      
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyBYLelALpmTVLsu3Ss3ke-s4PkWlxXMDn0",
+          authDomain: "gsdemo-cbb39.firebaseapp.com",
+          projectId: "gsdemo-cbb39",
+          storageBucket: "gsdemo-cbb39.appspot.com",
+          messagingSenderId: "109146340879",
+          appId: "1:109146340879:web:68f3f1bee923a1603ded7a"
+        };
+      
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db  = getDatabase(app); //RealtimeDBに接続
+        const dbRef = ref(db,"chat"); //RealtimeDB内の"chat"を使う
+
+
+// // はじまり
+// // 送信処理
+//       // on　は監視するみたいなイメージ
+      $("#send").on("click", function () {
+        // alert(1)
+        // 送信の処理を記述していきます。
+        // id="uname" つまり#uname 名前のところ
+        // id="text"　つまり#text　テキストエリアのところ
+        const uname = $("#uname").val();
+        const text = $("#text").val();
+        // alert(uname + text);
+
+        // データの塊を作成（変数宣言）
+        const msg = {
+          uname: $("#uname").val(),
+          text: $("#text").val(),
+        };
+
+        // ユニークなキーを生成＝絶対に被らない番号みたいなもの
+        // ユニークキーを作る
+        const newPostRef = push(dbRef);
+        console.log(newPostRef, "newPostRef");
+
+        // chatにユニークなキーを入れてオブジェクトデータを登録
+        set(newPostRef, msg);
+      });
+
+      //エンターキーでデータ登録(授業テキストと山﨑先生のyoutube)
+      $("#text").on("keydown", function (e) {
+        console.log(e); //e変数の中身を確認！！
+        if (e.keyCode == 13) {
+          //エンターキーは　13
+          const msg = {
+            uname: $("#uname").val(),
+            text: $("#text").val(),
+          };
+          const newPostRef = push(dbRef); //ユニークKEYを生成
+          set(newPostRef, msg); //"chat"にユニークKEYをつけてオブジェクトデータを登録
+        }
+      });
+
+      //受信処理
+      onChildAdded(dbRef, function (data) {
+        const msg = data.val();
+        const key = data.key; //これが固有の鍵でユニークキーの取得
+        console.log(key, "鍵");
+
+        // テンプレートリテラルじゃないバージョン
+        // let h = "<p>";
+        // h += msg.uname;
+        // h += "<br>";
+        // h += msg.text;
+        // h += "</p>";
+
+        // テンプレートリテラル (DOMで作った)
+        let hh = `
+        <div class="message" data-key=${key}>
+          <input type="text" value=${msg.uname} class="uname"/>
+          <input type="text" value=${msg.text}  class="text"/>
+          <p class="update">更新</p>
+          <p class="delete">削除</p>
+        </div>`;
+        //この一つの塊が「鍵」を表してる
+        // 更新はinputタグでしかできない
+        // append（後ろに追加）をprepend（上に追加に変更）
+        $("#output").prepend(hh);
+      });
+
+      // 削除
+      //htmlで作ったため、documentでコードを書く(DOM)。
+      $(document).on("click", ".delete", function () {
+        var v = $(this).parent().data().key;
+        console.log(v, "vvv"); //-MrWxLlpH8HdF7WXK_U9
+
+        //vは鍵 refはファイヤーベースを参照する
+        remove(ref(db, "chat/" + v));
+        // ファイヤーベースの説明にある　set(ref(db, 'users/' + userId)　をremoveに変えてある　https://firebase.google.com/docs/database/web/read-and-write?authuser=0 users=chats userID=v
+
+        //htmlを消す方法
+        $(this).parent().remove();
+      });
+
+      // 更新
+      $(document).on("click", ".update", function () {
+        var v = $(this).parent().data().key;
+
+        var nameValue = $(this).siblings(".uname").val();
+        var textValue = $(this).siblings(".text").val();
+
+        console.log(nameValue, "同じ列");
+        console.log(textValue, "同じ列");
+        //クリックされた親の鍵を取得する
+
+        //更新処理
+        set(ref(db, "chat/" + v), {
+          uname: nameValue,
+          text: textValue,
+        });
+      });
+
+
+ </script>
+
+      </style>
+            <!-- jqueryが必ず先です！ -->
+            <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+            <!-- 授業でやる箇所 ↓-->
+            <script src="js/test.js"></script>
+</body>
+</html>

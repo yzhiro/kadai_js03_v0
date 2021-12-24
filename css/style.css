@@ -1,0 +1,115 @@
+
+.message {
+  width: 500px;
+  border-radius: 10px;
+  box-shadow: 2px 3px 10px rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+input {
+  border: 1px solid #000;
+  width: 40%;
+  padding: 10px;
+  box-sizing: border-box;
+  height: 50px;
+}
+
+.update {
+  margin-left: auto;
+  width: 50px;
+  height: 50px;
+  background: pink;
+  line-height: 50px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+  transition: all .3s;
+}
+
+.update:hover {
+  opacity: .6;
+  cursor: pointer;
+}
+
+.delete {
+  width: 50px;
+  height: 50px;
+  background: gray;
+  line-height: 50px;
+  text-align: center;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.delete:hover {
+  opacity: .6;
+  cursor: pointer;
+}
+
+
+
+
+div#output p:nth-child(odd) {
+    width: 80px;
+    background: cyan;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+div#output p:nth-child(even) {
+    background: pink;
+    width: 80px;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* even = 偶数
+odd  = 奇数
+覚え方 even(4文字なので偶数)、その反対がodd(３文字なので偶数) */
+
+body {
+  width: 1200px;
+}
+
+#output {
+  width: 600px;
+  overflow: auto;
+  border: 3px solid black;
+  margin: 50px 100px;
+  background-color: greenyellow;
+  align-items: center;
+}
+
+div#output {
+  /* 画像の上に文字を表示する */
+  /* 同じファイルの中にある場合のurlの書き方　https://techacademy.jp/magazine/23884 */
+  background-size: cover;
+  background-size: 100%;
+}
+
+.textBox {
+  display: block;
+  margin: 0 0 0 100px;
+  background-color: khaki;
+}
+
+.textBox1 {
+  width: 500px;
+  padding: 0 0 10px 0;
+}
+
+.name{
+  align-items: center;
+}
+
+.area{
+  align-items: center;
+}
